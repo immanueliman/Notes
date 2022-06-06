@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+   
+</head>
+<style>
+
+    *{
+        font-style: italic;
+    }
+    
+    #all{
+    /* border-style:inherit;
+    background-color: aqua;
+    margin: 10px 50px 10px 50px */
+}
+body{
+    /* background-color: antiquewhite; */
+    background-image: url('stars.gif');
+    /* background-repeat: no-repeat;
+    background-size: cover; */
+}
+.onebyone{
+    border-style:double ;
+    background-color: white;
+    display: inline-block;
+    padding: 5px 20px 5px 20px;
+    margin: 50px 50px 50px 50px;
+    background-color:cornflowerblue;
+    border-radius: 15px;
+}
+
+#notes{
+    height: 50px;
+    font-style: italic;
+}
+
+.center{
+    text-align: center;
+    padding: auto;
+    margin: auto;
+}
+
+input{
+    border-color: blueviolet;
+    width: 400px;
+    height: 40px;
+    border-radius: 15px;
+}
+h1{
+    color:aliceblue;
+    font-size: 50px;
+    font-style: italic;
+}
+
+.btn{
+  background-color: slateblue;
+  color: white;
+  height: 40px;
+  width: 80px;
+  border-radius: 5px;
+}
+.red{
+    background-color: red;
+  color: white;
+  height: 30px;
+  width: 60px;
+  border-radius: 5px;
+  
+}
+.yellow{
+    background-color: yellow;
+  color: black;
+  height: 30px;
+  width: 60px;
+  border-radius: 5px;
+}
+.form-control{
+    height: 200px;
+}
+.date{
+    margin-bottom: 3px;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+#nocontent{
+   
+   padding-left: 50px;
+   font-size: 50px;
+   color: aliceblue;
+   font-style: italic;
+}
+</style>
+<body>
+    <div class=" center ">
+    <h1>Your privacy in your hand</h1>
+    
+        <input type="text" placeholder="Tittle" id="tittle" p-50><br><br>
+        <input type="text" class="form-control" rows = "60" placeholder="Notes" id="notes"><br><br>
+        <button onclick="submit()" class="btn">Add notes</button>&nbsp;&nbsp;
+        <button onclick="change()" class="btn">Change</button>
+        
+       
+        <br><br><br>
+    </div> 
+
+        <h2 id="nocontent"></h2>
+
+        <div id="all">
+            
+        </div>
+
+        <div id="popup"></div>
+          
+         
+         
+    
+    
+</body>
+
+<script>
+
+   
+     
+     //for adding notes
+    function submit(){
+       var id 
+      const tittle = document.getElementById("tittle").value;
+      const notes = document.getElementById("notes").value;
+      if(tittle== ""){
+          alert("Please enter tittle")
+      }
+      else{
+
+      var arr = JSON.parse(localStorage.getItem('notes'))
+      if(arr == null){
+          id = 1;
+          const date = new Date()
+          var time = date.getHours() + ":" + date.getMinutes();
+          var time = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+          var data =[[id,tittle,notes,date.toLocaleDateString(),time]]
+          localStorage.setItem("notes",JSON.stringify(data))
+          localStorage.setItem("notesid",JSON.stringify(id))
+      }
+      else{
+        const date = new Date()
+        var time = date.getHours() + ":" + date.getMinutes();
+          id = JSON.parse(localStorage.getItem("notesid"))
+          id = id+1
+          arr.push([id,tittle,notes,date.toLocaleDateString(),time])
+          localStorage.setItem("notes",JSON.stringify(arr))
+          localStorage.setItem("notesid",JSON.stringify(id))
+      }
+      document.getElementById("tittle").value="";
+      document.getElementById("notes").value = "";
+      console.log(tittle+": "+notes)
+      window.location.reload();
+
+    }
+   }  
+    
+ //for display notes 
+    function disaplynotes(){
+        
+        
+        if(localStorage.getItem('notes') == "[]"){
+            console.log(localStorage.getItem('notes') )
+            document.getElementById("nocontent").innerHTML = " No notes.. "
+        }
+        else{
+            const arr = JSON.parse(localStorage.getItem('notes'))
+            for(var i=0 ; i<=arr.length; i++){
+                
+                const a = document.createElement('div');
+                a.setAttribute('class','onebyone');
+                const b = document.createElement('h2');
+                b.innerText= arr[i][1]
+                a.appendChild(b)
+
+                const c = document.createElement('p');
+                c.innerText= arr[i][2]
+                a.appendChild(c)
+               
+                const d = document.createElement('div');
+                d.innerHTML = `<button class="yellow" data-toggle="modal" data-target="#exampleModal" onclick="editData(${i})">Edit</button>
+                &nbsp;<button class="red" onclick="deleteData(${i})" >Delete</button></br></br>`;
+                a.appendChild(d)
+
+                const e = document.createElement('p');
+                e.setAttribute('class','date');
+                e.innerText = arr[i][3]
+                a.appendChild(e)
+
+                const f = document.createElement('p');
+                f.setAttribute('class','date');
+                f.innerText = arr[i][4]
+                a.appendChild(f)
+
+                const m = document.getElementById('all')
+                m.appendChild(a)
+            }
+        }
+    }
+    disaplynotes();
+
+   
+
+    //for delete notes
+    
+  var index
+   // for edit notes and pop up small box for entering new values
+
+    function editData(id){
+        console.log(id)
+         
+        
+        const arr =JSON.parse(localStorage.getItem('notes'))
+        document.getElementById('tittle').value = arr[id][1]
+        document.getElementById('notes').value = arr[id][2]
+        
+        index = arr.indexOf(arr[id])
+        
+        
+
+    }
+
+    //for entered values changing
+
+    function change(){
+        if(document.getElementById('tittle').value == ""){
+            alert('Press Edit On Note What do You Want for Change')
+        }
+        console.log(index)
+        const date = new Date()
+        var time = date.getHours() + ":" + date.getMinutes();
+        const a = document.getElementById('tittle').value;
+        const b = document.getElementById('notes').value;
+        const arr =JSON.parse(localStorage.getItem('notes'))
+        arr[index][1] = a;
+        arr[index][2] = b;
+        arr[index][3] = date.toLocaleDateString()
+        arr[index][4] = time;
+        localStorage.setItem('notes',JSON.stringify(arr))
+        window.location.reload()
+       }
+
+
+       function deleteData(rid) {
+        const arr =JSON.parse(localStorage.getItem('notes'))
+        
+        arr.splice(rid,1);
+        localStorage.setItem("notes",JSON.stringify(arr))
+       
+        window.location.reload();
+        disaplynotes();
+        
+    
+     }
+   
+</script>
+</html>
